@@ -218,6 +218,14 @@ def evaluate(
             reqs = task.construct_requests(doc, ctx)
             if not isinstance(reqs, (list, tuple)):
                 reqs = [reqs]
+            for r in reqs:
+                prompt_wrap = (
+                    "Below is an instruction that describes a task. "
+                    "Write a response that appropriately completes the request.\n\n"
+                    "### Instruction:\n{instruction}\n\n### Response:"
+                )
+                r.args = (prompt_wrap.format_map({"instruction": r.args[0]}), r.args[1])
+
             for i, req in enumerate(reqs):
                 requests[req.request_type].append(req)
                 # i: index in requests for a single task instance
@@ -243,7 +251,7 @@ def evaluate(
         #       solution. we could also implement some kind of auto-grouping here;
         #       they should end up next to each other.
 
-        print("Running", reqtype, "requests")
+        
         resps = getattr(lm, reqtype)([req.args for req in reqs])
         resps = [
             x if req.index is None else x[req.index] for x, req in zip(resps, reqs)
