@@ -6,6 +6,9 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mem=64G
 
+#you can run a job with this command:
+#sbatch --partition=xxx --job-name=t5-small --output=./outfile/t5-small.out --error=./outfile/t5-small.err run_loop.sh hf-seq2seq MBZUAI/LaMini-T5-61M eval_res/t5-small-
+
 source ~/.bashrc
 conda activate your_evn
 
